@@ -650,7 +650,7 @@ const App: React.FC = () => {
             const textPart = { text: finalPrompt };
 
             const response = await genAI.models.generateContent({
-                model: 'gemini-2.5-flash-image',
+                model: 'gemini-3.1-flash-lite-image',
                 contents: { parts: [imagePart, textPart] },
                 config: { responseModalities: [Modality.IMAGE, Modality.TEXT] },
             });
@@ -831,7 +831,7 @@ const App: React.FC = () => {
       return;
     }
 
-    const modelName = generationModel === 'pro' ? 'gemini-3.1-flash-image-preview' : 'gemini-2.5-flash-image';
+    const modelName = generationModel === 'pro' ? 'gemini-3.1-flash-image-preview' : 'gemini-3.1-flash-lite-image';
 
     const imageElements = selectedElements.filter(el => el.type === 'image' || el.type === 'drawing') as (ImageElement | DrawingElement)[];
     const noteElements = selectedElements.filter(el => el.type === 'note') as NoteElement[];

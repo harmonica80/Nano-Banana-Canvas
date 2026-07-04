@@ -709,7 +709,7 @@ export const ImageEditModal: React.FC<ImageEditModalProps> = ({ element, onSave,
       const textPart = { text: textPrompt };
 
       const response = await ai.models.generateContent({
-        model: 'gemini-2.5-flash-image',
+        model: 'gemini-3.1-flash-lite-image',
         contents: { parts: [imagePart, textPart] },
         config: {
           responseModalities: [Modality.IMAGE, Modality.TEXT],
