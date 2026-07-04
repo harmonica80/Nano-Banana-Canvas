@@ -405,6 +405,15 @@ const App: React.FC = () => {
     console.error("AI Operation Error:", error);
     const msg = error?.message || (typeof error === 'string' ? error : JSON.stringify(error));
     
+    const customKey = localStorage.getItem('CUSTOM_GEMINI_API_KEY');
+    const activeKey = (customKey && customKey.trim()) ? customKey.trim() : (process.env.API_KEY || '');
+    const keyHint = activeKey 
+      ? `${activeKey.substring(0, 6)}...${activeKey.substring(Math.max(0, activeKey.length - 4))}` 
+      : '(Empty / Undefined)';
+    
+    const diagMsgEn = `${msg}\n\n[Diagnostics - Active Key: ${keyHint}]`;
+    const diagMsgZh = `[診斷資訊 - 當前使用的金鑰: ${keyHint}]`;
+    
     // Check for leaked key or 403 errors
     if (msg.includes('leaked') || msg.includes('403') || error?.status === 403 || error?.code === 403) {
       if ((window as any).aistudio?.openSelectKey) {
@@ -413,7 +422,10 @@ const App: React.FC = () => {
           await (window as any).aistudio.openSelectKey();
         }
       } else {
-        setAiErrorMessage({ en: `API Key Error: ${msg}`, zh: `API Key 錯誤: ${msg}` });
+        setAiErrorMessage({ 
+          en: `API Key Error: ${diagMsgEn}`, 
+          zh: `API Key 錯誤: ${msg}\n\n${diagMsgZh}` 
+        });
       }
       return;
     }
@@ -438,7 +450,10 @@ const App: React.FC = () => {
       }
     }
 
-    setAiErrorMessage({ en: msg, zh: zhMsg });
+    setAiErrorMessage({ 
+      en: diagMsgEn, 
+      zh: `${zhMsg}\n\n${diagMsgZh}` 
+    });
   }, [getAi, language]);
 
   const getCenterOfViewport = useCallback((): Point => {
